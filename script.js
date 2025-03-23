@@ -6,7 +6,8 @@ let image = new Image();
 document.getElementById('imageUpload').addEventListener('change', loadImage);
 document.getElementById('removeWatermarkBtn').addEventListener('click', removeWatermark);
 document.getElementById('downloadImageBtn').addEventListener('click', downloadImage);
-document.getElementById('resizeImageBtn').addEventListener('click', resizeImage);
+document.getElementById('resizeImageBtn').addEventListener('click', showResizeOptions);
+document.getElementById('applyResizeBtn').addEventListener('click', applyResize);
 
 canvas.addEventListener('mousedown', startDrawing);
 canvas.addEventListener('mousemove', draw);
@@ -76,9 +77,13 @@ function downloadImage() {
     link.click();
 }
 
-function resizeImage() {
-    const newWidth = parseInt(prompt("Enter new width:"));
-    const newHeight = parseInt(prompt("Enter new height:"));
+function showResizeOptions() {
+    document.getElementById('resizeOptions').style.display = 'block';
+}
+
+function applyResize() {
+    const newWidth = parseInt(document.getElementById('newWidth').value);
+    const newHeight = parseInt(document.getElementById('newHeight').value);
 
     if (newWidth && newHeight) {
         const tempCanvas = document.createElement('canvas');
