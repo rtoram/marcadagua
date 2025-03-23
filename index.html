@@ -1,19 +1,23 @@
-document.getElementById('resizeImageBtn').addEventListener('click', resizeImage);
-
-function resizeImage() {
-    const newWidth = prompt("Enter new width:");
-    const newHeight = prompt("Enter new height:");
-
-    if (newWidth && newHeight) {
-        const tempCanvas = document.createElement('canvas');
-        const tempCtx = tempCanvas.getContext('2d');
-
-        tempCanvas.width = newWidth;
-        tempCanvas.height = newHeight;
-        tempCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, newWidth, newHeight);
-
-        canvas.width = newWidth;
-        canvas.height = newHeight;
-        ctx.drawImage(tempCanvas, 0, 0);
-    }
-}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XperiMarca D'Água</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="sidebar">
+        <h2>XperiMarca D'Água</h2>
+        <input type="file" id="imageUpload" accept="image/*">
+        <button id="removeWatermarkBtn">Remover Marca d'Água</button>
+        <button id="downloadImageBtn">Baixar Imagem</button>
+        <button id="resizeImageBtn">Redimensionar Imagem</button>
+        <!-- Adicione outros botões conforme necessário -->
+    </div>
+    <div class="main-content">
+        <canvas id="imageCanvas"></canvas>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
