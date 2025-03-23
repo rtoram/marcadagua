@@ -57,23 +57,24 @@ function removeWatermark() {
     const width = endX - startX;
     const height = endY - startY;
 
-    // Get the surrounding area
-    const surroundingData = ctx.getImageData(startX - 10, startY - 10, width + 20, height + 20);
+    // Get the image data of the selected area
+    const imageData = ctx.getImageData(startX, startY, width, height);
+    const data = imageData.data;
 
-    // Create a temporary canvas to hold the surrounding area
+    // Create a temporary canvas to work with the image data
     const tempCanvas = document.createElement('canvas');
     const tempCtx = tempCanvas.getContext('2d');
-    tempCanvas.width = width + 20;
-    tempCanvas.height = height + 20;
+    tempCanvas.width = width;
+    tempCanvas.height = height;
 
-    // Draw the surrounding area on the temporary canvas
-    tempCtx.putImageData(surroundingData, 0, 0);
+    // Copy the surrounding pixels to the temporary canvas
+    tempCtx.putImageData(imageData, 0, 0);
 
     // Clear the selected area on the main canvas
     ctx.clearRect(startX, startY, width, height);
 
-    // Draw the surrounding area back on the main canvas, without the watermark area
-    ctx.drawImage(tempCanvas, 10, 10, width, height, startX, startY, width, height);
+    // Draw the temporary canvas back on the main canvas
+    ctx.drawImage(tempCanvas, 0, 0, width, height, startX, startY, width, height);
 }
 
 function downloadImage() {
