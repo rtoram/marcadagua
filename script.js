@@ -57,13 +57,23 @@ function removeWatermark() {
     const width = endX - startX;
     const height = endY - startY;
 
-    // Use a simple cloning technique to remove the watermark
-    const sourceX = startX - width > 0 ? startX - width : 0;
-    const sourceY = startY - height > 0 ? startY - height : 0;
-
     // Get the surrounding area
-    const surroundingData = ctx.getImageData(sourceX, sourceY, width, height);
-    ctx.putImageData(surroundingData, startX, startY);
+    const surroundingData = ctx.getImageData(startX - 10, startY - 10, width + 20, height + 20);
+
+    // Create a temporary canvas to hold the surrounding area
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d');
+    tempCanvas.width = width + 20;
+    tempCanvas.height = height + 20;
+
+    // Draw the surrounding area on the temporary canvas
+    tempCtx.putImageData(surroundingData, 0, 0);
+
+    // Clear the selected area on the main canvas
+    ctx.clearRect(startX, startY, width, height);
+
+    // Draw the surrounding area back on the main canvas, without the watermark area
+    ctx.drawImage(tempCanvas, 10, 10, width, height, startX, startY, width, height);
 }
 
 function downloadImage() {
