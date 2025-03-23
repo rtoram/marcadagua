@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Remover Marca d'Água</title>
+    <title>XperiMarca D'Água</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Remover Marca d'Água</h1>
+    <div class="sidebar">
+        <h2>XperiMarca D'Água</h2>
         <input type="file" id="imageUpload" accept="image/*">
-        <canvas id="imageCanvas"></canvas>
         <button id="removeWatermarkBtn">Remover Marca d'Água</button>
         <button id="downloadImageBtn">Baixar Imagem</button>
+        <button id="resizeImageBtn">Redimensionar Imagem</button>
+        <button id="cropImageBtn">Cortar Imagem</button>
+        <button id="adjustBrightnessContrastBtn">Ajustar Brilho/Contraste</button>
+        <button id="addTextBtn">Adicionar Texto</button>
+        <button id="applyFilterBtn">Aplicar Filtro</button>
+    </div>
+    <div class="main-content">
+        <canvas id="imageCanvas"></canvas>
     </div>
     <script src="script.js"></script>
 </body>
