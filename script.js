@@ -1,4 +1,4 @@
-let startX, startY, isDrawing = false;
+let startX, startY, endX, endY, isDrawing = false;
 const canvas = document.getElementById('imageCanvas');
 const ctx = canvas.getContext('2d');
 let image = new Image();
@@ -34,28 +34,33 @@ function startDrawing(event) {
 
 function draw(event) {
     if (!isDrawing) return;
-    const currentX = event.offsetX;
-    const currentY = event.offsetY;
+    endX = event.offsetX;
+    endY = event.offsetY;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.drawImage(image, 0, 0);
     ctx.strokeStyle = 'red';
     ctx.lineWidth = 2;
-    ctx.strokeRect(startX, startY, currentX - startX, currentY - startY);
+    ctx.strokeRect(startX, startY, endX - startX, endY - startY);
 }
 
 function endDrawing(event) {
     if (!isDrawing) return;
     isDrawing = false;
+    endX = event.offsetX;
+    endY = event.offsetY;
 }
 
 function removeWatermark() {
-    const currentX = event.offsetX;
-    const currentY = event.offsetY;
-    const width = currentX - startX;
-    const height = currentY - startY;
+    const width = endX - startX;
+    const height = endY - startY;
 
+    // Clear the selected area
     ctx.clearRect(startX, startY, width, height);
+
+    // Optionally, apply a simple fill to replace the cleared area
+    ctx.fillStyle = '#FFFFFF'; // You can change this to the background color of your image
+    ctx.fillRect(startX, startY, width, height);
 }
 
 function downloadImage() {
