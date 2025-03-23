@@ -55,12 +55,17 @@ function removeWatermark() {
     const width = endX - startX;
     const height = endY - startY;
 
-    // Clear the selected area
-    ctx.clearRect(startX, startY, width, height);
+    // Get image data
+    const imageData = ctx.getImageData(startX, startY, width, height);
+    const data = imageData.data;
 
-    // Optionally, apply a simple fill to replace the cleared area
-    ctx.fillStyle = '#FFFFFF'; // You can change this to the background color of your image
-    ctx.fillRect(startX, startY, width, height);
+    // Apply a simple algorithm to remove the watermark
+    for (let i = 0; i < data.length; i += 4) {
+        // Example: make pixels transparent
+        data[i + 3] = 0; // Set alpha to 0
+    }
+
+    ctx.putImageData(imageData, startX, startY);
 }
 
 function downloadImage() {
