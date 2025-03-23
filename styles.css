@@ -1,20 +1,52 @@
 body {
     font-family: Arial, sans-serif;
     display: flex;
-    justify-content: center;
-    align-items: center;
     height: 100vh;
     margin: 0;
     background-color: #f0f0f0;
 }
 
-.container {
+.sidebar {
+    width: 250px;
+    background-color: #333;
+    color: white;
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+}
+
+.sidebar h2 {
     text-align: center;
 }
 
+.sidebar input, .sidebar button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+}
+
+.sidebar button {
+    background-color: #555;
+    color: white;
+    cursor: pointer;
+}
+
+.sidebar button:hover {
+    background-color: #777;
+}
+
+.main-content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
 canvas {
-    display: block;
-    margin: 20px auto;
     border: 1px solid #ccc;
     cursor: crosshair;
+    max-width: 100%;
+    height: auto;
 }
