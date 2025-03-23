@@ -57,17 +57,13 @@ function removeWatermark() {
     const width = endX - startX;
     const height = endY - startY;
 
-    // Get image data
-    const imageData = ctx.getImageData(startX, startY, width, height);
-    const data = imageData.data;
+    // Use a simple cloning technique to remove the watermark
+    const sourceX = startX - width > 0 ? startX - width : 0;
+    const sourceY = startY - height > 0 ? startY - height : 0;
 
-    // Apply a simple algorithm to remove the watermark
-    for (let i = 0; i < data.length; i += 4) {
-        // Example: make pixels transparent
-        data[i + 3] = 0; // Set alpha to 0
-    }
-
-    ctx.putImageData(imageData, startX, startY);
+    // Get the surrounding area
+    const surroundingData = ctx.getImageData(sourceX, sourceY, width, height);
+    ctx.putImageData(surroundingData, startX, startY);
 }
 
 function downloadImage() {
