@@ -1,4 +1,3 @@
-let startX, startY, endX, endY, isDrawing = false;
 const canvas = document.getElementById('imageCanvas');
 const ctx = canvas.getContext('2d');
 let image = new Image();
@@ -8,10 +7,6 @@ document.getElementById('separateColorsBtn').addEventListener('click', separateC
 document.getElementById('downloadImageBtn').addEventListener('click', downloadImage);
 document.getElementById('resizeImageBtn').addEventListener('click', showResizeOptions);
 document.getElementById('applyResizeBtn').addEventListener('click', applyResize);
-
-canvas.addEventListener('mousedown', startDrawing);
-canvas.addEventListener('mousemove', draw);
-canvas.addEventListener('mouseup', endDrawing);
 
 function loadImage(event) {
     const file = event.target.files[0];
@@ -28,41 +23,21 @@ function loadImage(event) {
     reader.readAsDataURL(file);
 }
 
-function startDrawing(event) {
-    isDrawing = true;
-    startX = event.offsetX;
-    startY = event.offsetY;
-}
-
-function draw(event) {
-    if (!isDrawing) return;
-    endX = event.offsetX;
-    endY = event.offsetY;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    ctx.drawImage(image, 0, 0);
-    ctx.strokeStyle = 'red';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(startX, startY, endX - startX, endY - startY);
-}
-
-function endDrawing(event) {
-    if (!isDrawing) return;
-    isDrawing = false;
-    endX = event.offsetX;
-    endY = event.offsetY;
-}
-
 function separateColorsCMYK() {
     const width = canvas.width;
     const height = canvas.height;
     const imageData = ctx.getImageData(0, 0, width, height);
     const data = imageData.data;
 
-    const cyanCanvas = createColorCanvas(width, height);
-    const magentaCanvas = createColorCanvas(width, height);
-    const yellowCanvas = createColorCanvas(width, height);
-    const blackCanvas = createColorCanvas(width, height);
+    const cyanCanvas = document.getElementById('cyanLayer').querySelector('canvas');
+    const magentaCanvas = document.getElementById('magentaLayer').querySelector('canvas');
+    const yellowCanvas = document.getElementById('yellowLayer').querySelector('canvas');
+    const blackCanvas = document.getElementById('blackLayer').querySelector('canvas');
+
+    [cyanCanvas, magentaCanvas, yellowCanvas, blackCanvas].forEach((canvas) => {
+        canvas.width = width;
+        canvas.height = height;
+    });
 
     const cyanCtx = cyanCanvas.getContext('2d');
     const magentaCtx = magentaCanvas.getContext('2d');
@@ -115,24 +90,47 @@ function separateColorsCMYK() {
     yellowCtx.putImageData(yellowImageData, 0, 0);
     blackCtx.putImageData(blackImageData, 0, 0);
 
-    downloadCanvas(cyanCanvas, 'cyan.png');
-    downloadCanvas(magentaCanvas, 'magenta.png');
-    downloadCanvas(yellowCanvas, 'yellow.png');
-    downloadCanvas(blackCanvas, 'black.png');
+    const layers = document.querySelectorAll('.color-layer');
+    layers.forEach(layer => {
+        layer.style.display = 'inline-block';
+    });
+
+    makeDraggable(layers);
 }
 
-function createColorCanvas(width, height) {
-    const canvas = document.createElement('canvas');
-    canvas.width = width;
-    canvas.height = height;
-    return canvas;
+function makeDraggable(elements) {
+    elements.forEach(element => {
+        element.addEventListener('dragstart', dragStart);
+        element.addEventListener('dragend', dragEnd);
+    });
+
+    canvas.addEventListener('dragover', dragOver);
+    canvas.addEventListener('drop', drop);
 }
 
-function downloadCanvas(canvas, filename) {
-    const link = document.createElement('a');
-    link.download = filename;
-    link.href = canvas.toDataURL();
-    link.click();
+function dragStart(e) {
+    e.dataTransfer.setData('text/plain', e.target.id);
+}
+
+function dragEnd() {
+    canvas.classList.remove('over');
+}
+
+function dragOver(e) {
+    e.preventDefault();
+    canvas.classList.add('over');
+}
+
+function drop(e) {
+    e.preventDefault();
+    const id = e.dataTransfer.getData('text');
+    const draggedElement = document.getElementById(id);
+    const rect = canvas.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+
+    const draggedCanvas = draggedElement.querySelector('canvas');
+    ctx.drawImage(draggedCanvas, x, y);
 }
 
 function downloadImage() {
