@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Xperi Dime e CMYK</title>
+    <title>XperiDimi CMYK</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="sidebar">
-        <h2>Xperi Dimi e CMYK</h2>
+        <h2>XperiDimi CMYK</h2>
         <input type="file" id="imageUpload" accept="image/*">
         <button id="separateColorsBtn">Separar Cores CMYK</button>
         <button id="downloadImageBtn">Baixar Imagem</button>
@@ -21,6 +21,12 @@
     </div>
     <div class="main-content">
         <canvas id="imageCanvas"></canvas>
+        <div id="colorLayers" class="color-layers">
+            <div class="color-layer" id="cyanLayer" draggable="true"><canvas></canvas></div>
+            <div class="color-layer" id="magentaLayer" draggable="true"><canvas></canvas></div>
+            <div class="color-layer" id="yellowLayer" draggable="true"><canvas></canvas></div>
+            <div class="color-layer" id="blackLayer" draggable="true"><canvas></canvas></div>
+        </div>
     </div>
     <script src="script.js"></script>
 </body>
