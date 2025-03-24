@@ -39,7 +39,7 @@ body {
 .main-content {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     padding: 20px;
 }
@@ -49,21 +49,4 @@ canvas {
     cursor: crosshair;
     max-width: 100%;
     height: auto;
-}
-
-.color-layers {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
-}
-
-.color-layer {
-    margin: 0 10px;
-    cursor: grab;
-}
-
-.color-layer canvas {
-    border: 1px solid #ccc;
-    width: 150px;
-    height: 150px;
 }
