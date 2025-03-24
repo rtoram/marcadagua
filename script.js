@@ -4,6 +4,7 @@ let image = new Image();
 let originalImageData;
 let currentColorIndex = 0;
 const colorLayers = ['cyan', 'magenta', 'yellow', 'black'];
+let layers = {};
 
 document.getElementById('imageUpload').addEventListener('change', loadImage);
 document.getElementById('downloadImageBtn').addEventListener('click', downloadImage);
@@ -11,6 +12,8 @@ document.getElementById('separateColorsBtn').addEventListener('click', separateC
 document.getElementById('toggleColorBtn').addEventListener('click', toggleColor);
 document.getElementById('clearImageBtn').addEventListener('click', clearImage);
 document.getElementById('restoreImageBtn').addEventListener('click', restoreImage);
+document.getElementById('resizeImageBtn').addEventListener('click', showResizeOptions);
+document.getElementById('applyResizeBtn').addEventListener('click', applyResize);
 
 function loadImage(event) {
     const file = event.target.files[0];
@@ -36,7 +39,7 @@ function separateColorsCMYK() {
     const imageData = ctx.getImageData(0, 0, width, height);
     const data = imageData.data;
 
-    const layers = {
+    layers = {
         cyan: new Uint8ClampedArray(data),
         magenta: new Uint8ClampedArray(data),
         yellow: new Uint8ClampedArray(data),
@@ -74,14 +77,24 @@ function separateColorsCMYK() {
         layers.black[i + 3] = 255;
     }
 
-    ctx.putImageData(new ImageData(layers[colorLayers[currentColorIndex]], width, height), 0, 0);
+    currentColorIndex = 0;
+    displayColorLayer();
+}
+
+function displayColorLayer() {
+    const width = canvas.width;
+    const height = canvas.height;
+    if (layers[colorLayers[currentColorIndex]]) {
+        const colorImageData = new ImageData(layers[colorLayers[currentColorIndex]], width, height);
+        ctx.putImageData(colorImageData, 0, 0);
+    }
 }
 
 function toggleColor() {
     if (!originalImageData) return;
 
     currentColorIndex = (currentColorIndex + 1) % colorLayers.length;
-    separateColorsCMYK();
+    displayColorLayer();
 }
 
 function clearImage() {
@@ -98,4 +111,26 @@ function downloadImage() {
     link.download = 'image.png';
     link.href = canvas.toDataURL();
     link.click();
+}
+
+function showResizeOptions() {
+    document.getElementById('resizeOptions').style.display = 'block';
+}
+
+function applyResize() {
+    const newWidth = parseInt(document.getElementById('newWidth').value);
+    const newHeight = parseInt(document.getElementById('newHeight').value);
+
+    if (newWidth && newHeight) {
+        const tempCanvas = document.createElement('canvas');
+        const tempCtx = tempCanvas.getContext('2d');
+
+        tempCanvas.width = newWidth;
+        tempCanvas.height = newHeight;
+        tempCtx.drawImage(canvas, 0, 0, canvas.width, canvas.height, 0, 0, newWidth, newHeight);
+
+        canvas.width = newWidth;
+        canvas.height = newHeight;
+        ctx.drawImage(tempCanvas, 0, 0, newWidth, newHeight);
+    }
 }
