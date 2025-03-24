@@ -9,7 +9,6 @@ let layers = {};
 document.getElementById('imageUpload').addEventListener('change', loadImage);
 document.getElementById('downloadImageBtn').addEventListener('click', downloadImage);
 document.getElementById('separateColorsBtn').addEventListener('click', separateColorsCMYK);
-document.getElementById('toggleColorBtn').addEventListener('click', toggleColor);
 document.getElementById('clearImageBtn').addEventListener('click', clearImage);
 document.getElementById('restoreImageBtn').addEventListener('click', restoreImage);
 document.getElementById('resizeImageBtn').addEventListener('click', showResizeOptions);
@@ -39,45 +38,46 @@ function separateColorsCMYK() {
     const imageData = ctx.getImageData(0, 0, width, height);
     const data = imageData.data;
 
-    layers = {
-        cyan: new Uint8ClampedArray(data),
-        magenta: new Uint8ClampedArray(data),
-        yellow: new Uint8ClampedArray(data),
-        black: new Uint8ClampedArray(data)
-    };
+    if (Object.keys(layers).length === 0) {
+        layers = {
+            cyan: new Uint8ClampedArray(data),
+            magenta: new Uint8ClampedArray(data),
+            yellow: new Uint8ClampedArray(data),
+            black: new Uint8ClampedArray(data)
+        };
 
-    for (let i = 0; i < data.length; i += 4) {
-        const r = data[i] / 255;
-        const g = data[i + 1] / 255;
-        const b = data[i + 2] / 255;
+        for (let i = 0; i < data.length; i += 4) {
+            const r = data[i] / 255;
+            const g = data[i + 1] / 255;
+            const b = data[i + 2] / 255;
 
-        const k = 1 - Math.max(r, g, b);
-        const c = (1 - r - k) / (1 - k) || 0;
-        const m = (1 - g - k) / (1 - k) || 0;
-        const y = (1 - b - k) / (1 - k) || 0;
+            const k = 1 - Math.max(r, g, b);
+            const c = (1 - r - k) / (1 - k) || 0;
+            const m = (1 - g - k) / (1 - k) || 0;
+            const y = (1 - b - k) / (1 - k) || 0;
 
-        layers.cyan[i] = (1 - c) * 255;
-        layers.cyan[i + 1] = 255;
-        layers.cyan[i + 2] = 255;
-        layers.cyan[i + 3] = 255;
+            layers.cyan[i] = (1 - c) * 255;
+            layers.cyan[i + 1] = 255;
+            layers.cyan[i + 2] = 255;
+            layers.cyan[i + 3] = 255;
 
-        layers.magenta[i] = 255;
-        layers.magenta[i + 1] = (1 - m) * 255;
-        layers.magenta[i + 2] = 255;
-        layers.magenta[i + 3] = 255;
+            layers.magenta[i] = 255;
+            layers.magenta[i + 1] = (1 - m) * 255;
+            layers.magenta[i + 2] = 255;
+            layers.magenta[i + 3] = 255;
 
-        layers.yellow[i] = 255;
-        layers.yellow[i + 1] = 255;
-        layers.yellow[i + 2] = (1 - y) * 255;
-        layers.yellow[i + 3] = 255;
+            layers.yellow[i] = 255;
+            layers.yellow[i + 1] = 255;
+            layers.yellow[i + 2] = (1 - y) * 255;
+            layers.yellow[i + 3] = 255;
 
-        layers.black[i] = k * 255;
-        layers.black[i + 1] = k * 255;
-        layers.black[i + 2] = k * 255;
-        layers.black[i + 3] = 255;
+            layers.black[i] = k * 255;
+            layers.black[i + 1] = k * 255;
+            layers.black[i + 2] = k * 255;
+            layers.black[i + 3] = 255;
+        }
     }
 
-    currentColorIndex = 0;
     displayColorLayer();
 }
 
@@ -88,13 +88,7 @@ function displayColorLayer() {
         const colorImageData = new ImageData(layers[colorLayers[currentColorIndex]], width, height);
         ctx.putImageData(colorImageData, 0, 0);
     }
-}
-
-function toggleColor() {
-    if (!originalImageData) return;
-
     currentColorIndex = (currentColorIndex + 1) % colorLayers.length;
-    displayColorLayer();
 }
 
 function clearImage() {
