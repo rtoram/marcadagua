@@ -10,23 +10,14 @@
     <div class="sidebar">
         <h2>XperiDimi CMYK</h2>
         <input type="file" id="imageUpload" accept="image/*">
-        <button id="separateColorsBtn">Separar Cores CMYK</button>
         <button id="downloadImageBtn">Baixar Imagem</button>
-        <button id="resizeImageBtn">Redimensionar Imagem</button>
-        <div id="resizeOptions" style="display:none;">
-            <input type="number" id="newWidth" placeholder="Nova Largura">
-            <input type="number" id="newHeight" placeholder="Nova Altura">
-            <button id="applyResizeBtn">Aplicar Redimensionamento</button>
-        </div>
+        <button id="separateColorsBtn">Separar Cores CMYK</button>
+        <button id="toggleColorBtn">Alternar Cor</button>
+        <button id="clearImageBtn">Apagar Imagem</button>
+        <button id="restoreImageBtn">Restaurar Imagem</button>
     </div>
     <div class="main-content">
         <canvas id="imageCanvas"></canvas>
-        <div id="colorLayers" class="color-layers">
-            <div class="color-layer" id="cyanLayer" draggable="true"><canvas></canvas></div>
-            <div class="color-layer" id="magentaLayer" draggable="true"><canvas></canvas></div>
-            <div class="color-layer" id="yellowLayer" draggable="true"><canvas></canvas></div>
-            <div class="color-layer" id="blackLayer" draggable="true"><canvas></canvas></div>
-        </div>
     </div>
     <script src="script.js"></script>
 </body>
